@@ -1,2 +1,2 @@
 # Json-Jackson
-jackson impl common json interface
+jackson impl common json interface.
