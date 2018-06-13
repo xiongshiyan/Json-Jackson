@@ -86,4 +86,15 @@ public class JSONArray extends BaseListJSONArray {
             throw new JsonException(e);
         }
     }
+
+    @Override
+    public JsonArray fromList(List<Object> list) {
+        try {
+            String jsonString = objectMapper.writeValueAsString(list);
+            this.list = objectMapper.readValue(jsonString, List.class);
+            return this;
+        } catch (IOException e) {
+            throw new JsonException(e);
+        }
+    }
 }
