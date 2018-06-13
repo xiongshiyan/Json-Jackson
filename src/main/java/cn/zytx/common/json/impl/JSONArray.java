@@ -8,142 +8,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 
 /**
  * @author xiongshiyan at 2018/6/11
  */
-public class JSONArray extends BaseJson<JSONArray> implements JsonArray {
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private List<Object> list;
+public class JSONArray extends BaseListJSONArray {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     public JSONArray(List<Object> list){
-        this.list = list;
+        super(list);
     }
     public JSONArray(){
-        this.list = new LinkedList<>();
+        super();
     }
     public JSONArray(String arrayString){
+        super(arrayString);
+    }
+
+    @Override
+    public List<Object> str2List(String arrayString) {
         try {
-            this.list = objectMapper.readValue(arrayString , List.class);
+            return objectMapper.readValue(arrayString , List.class);
         } catch (IOException e) {
             throw new JsonException(e);
         }
-    }
-    @Override
-    public int size() {
-        return list.size();
-    }
-
-    @Override
-    public Object get(int index) {
-        assertIndex(index , size());
-        return checkNullValue(index , list.get(index));
-    }
-
-    @Override
-    public String getString(int index) {
-        assertIndex(index , size());
-        String temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, String.class);
-        }else {
-            temp = (String)value;
-        }
-        return checkNullValue(index , temp);
-    }
-
-    @Override
-    public Boolean getBoolean(int index) {
-        assertIndex(index , size());
-        Boolean temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, Boolean.class);
-        }else {
-            temp = (Boolean)value;
-        }
-        return checkNullValue(index , temp);
-    }
-
-    @Override
-    public Integer getInteger(int index) {
-        assertIndex(index , size());
-        Integer temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, Integer.class);
-        }else {
-            temp = (Integer)value;
-        }
-        return checkNullValue(index , temp);
-    }
-
-    @Override
-    public Long getLong(int index) {
-        assertIndex(index , size());
-        Long temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, Long.class);
-        }else {
-            temp = (Long)value;
-        }
-        return checkNullValue(index , temp);
-    }
-
-    @Override
-    public Double getDouble(int index) {
-        assertIndex(index , size());
-        Double temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, Double.class);
-        }else {
-            temp = (Double)value;
-        }
-        return checkNullValue(index , temp);
-    }
-
-    @Override
-    public Float getFloat(int index) {
-        assertIndex(index , size());
-        Float temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, Float.class);
-        }else {
-            temp = (Float)value;
-        }
-        return checkNullValue(index , temp);
-    }
-
-    @Override
-    public BigInteger getBigInteger(int index) {
-        assertIndex(index , size());
-        BigInteger temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, BigInteger.class);
-        }else {
-            temp = (BigInteger)value;
-        }
-        return checkNullValue(index , temp);
-    }
-
-    @Override
-    public BigDecimal getBigDecimal(int index) {
-        assertIndex(index , size());
-        BigDecimal temp;
-        Object value = list.get(index);
-        if(isTolerant()){
-            temp = ValueCompatible.compatibleValue(value, BigDecimal.class);
-        }else {
-            temp = (BigDecimal)value;
-        }
-        return checkNullValue(index , temp);
     }
 
     @Override
@@ -167,50 +55,13 @@ public class JSONArray extends BaseJson<JSONArray> implements JsonArray {
     }
 
     @Override
-    public JsonArray remove(int index) {
-        list.remove(index);
-        return this;
-    }
-
-    @Override
-    public JsonArray clear() {
-        list.clear();
-        return this;
-    }
-
-    @Override
-    public JsonArray put(Object o) {
-        list.add(o);
-        return this;
-    }
-
-    @Override
-    public JsonArray put(int index, Object o) {
-        list.remove(index);
-        list.add(index , o);
-        return this;
-    }
-
-    @Override
-    public JsonArray putAll(Collection<?> os) {
-        list.addAll(os);
-        return this;
-    }
-
-    @Override
     public JsonArray parse(String jsonString) {
         try {
-            List list = objectMapper.readValue(jsonString, List.class);
-            this.list = list;
+            this.list = objectMapper.readValue(jsonString, List.class);
             return this;
         } catch (IOException e) {
             throw new JsonException(e);
         }
-    }
-
-    @Override
-    public List<Object> unwrap() {
-        return list;
     }
 
     @Override
@@ -234,15 +85,5 @@ public class JSONArray extends BaseJson<JSONArray> implements JsonArray {
         } catch (JsonProcessingException e) {
             throw new JsonException(e);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return list.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return list.equals(obj);
     }
 }
