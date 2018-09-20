@@ -1,11 +1,13 @@
 package top.jfunc.json.impl;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import top.jfunc.json.Json;
 import top.jfunc.json.JsonArray;
 import top.jfunc.json.JsonException;
 import top.jfunc.json.JsonObject;
+import top.jfunc.json.strategy.FieldPropertyNamingStrategy;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -80,9 +82,14 @@ public class JSONObject extends BaseMapJSONObject {
     }
 
     @Override
-    public String serialize(Object javaBean) {
+    public <T> String serialize(T javaBean, boolean nullHold, String... ignoreFields) {
         try {
-            return objectMapper.writeValueAsString(javaBean);
+            ObjectMapper mapper = new ObjectMapper();
+            if(!nullHold){
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            }
+            mapper.setPropertyNamingStrategy(new FieldPropertyNamingStrategy());
+            return mapper.writeValueAsString(javaBean);
         } catch (JsonProcessingException e) {
             throw new JsonException(e);
         }

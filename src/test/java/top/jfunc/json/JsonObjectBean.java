@@ -1,5 +1,7 @@
 package top.jfunc.json;
 
+import top.jfunc.json.annotation.JsonField;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class JsonObjectBean {
     private BigDecimal bigDecimal1;
     private Map<String , String> k3;
 
+    @JsonField("kk")
     public String getK1() {
         return k1;
     }
