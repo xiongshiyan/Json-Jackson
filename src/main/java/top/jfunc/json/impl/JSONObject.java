@@ -3,10 +3,12 @@ package top.jfunc.json.impl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import top.jfunc.json.Json;
 import top.jfunc.json.JsonArray;
 import top.jfunc.json.JsonException;
 import top.jfunc.json.JsonObject;
+import top.jfunc.json.strategy.ExcludeFilter;
 import top.jfunc.json.strategy.FieldPropertyNamingStrategy;
 
 import java.io.IOException;
@@ -85,11 +87,15 @@ public class JSONObject extends BaseMapJSONObject {
     public <T> String serialize(T javaBean, boolean nullHold, String... ignoreFields) {
         try {
             ObjectMapper mapper = new ObjectMapper();
+            //null值的处理
             if(!nullHold){
                 mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             }
+            //需要在Bean上添加 @JsonFilter(ExcludeFilter.FILTER_NAME)
+            ExcludeFilter excludeFilter = new ExcludeFilter(ignoreFields);
+            SimpleFilterProvider provider = new SimpleFilterProvider().addFilter(ExcludeFilter.FILTER_NAME , excludeFilter);
             mapper.setPropertyNamingStrategy(new FieldPropertyNamingStrategy());
-            return mapper.writeValueAsString(javaBean);
+            return mapper.writer(provider).writeValueAsString(javaBean);
         } catch (JsonProcessingException e) {
             throw new JsonException(e);
         }

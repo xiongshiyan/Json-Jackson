@@ -1,6 +1,8 @@
 package top.jfunc.json;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import top.jfunc.json.annotation.JsonField;
+import top.jfunc.json.strategy.ExcludeFilter;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -9,6 +11,7 @@ import java.util.Map;
 /**
  * @author xiongshiyan at 2018/6/11
  */
+@JsonFilter(ExcludeFilter.FILTER_NAME)
 public class JsonObjectBean {
     private String k1;
     private String k2;
@@ -21,7 +24,7 @@ public class JsonObjectBean {
     private BigDecimal bigDecimal1;
     private Map<String , String> k3;
 
-    @JsonField("kk")
+    @JsonField(value = "kkkkkkk")
     public String getK1() {
         return k1;
     }
@@ -30,6 +33,7 @@ public class JsonObjectBean {
         this.k1 = k1;
     }
 
+    @JsonField(serialize = false)
     public String getK2() {
         return k2;
     }

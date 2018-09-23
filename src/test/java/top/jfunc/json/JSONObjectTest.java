@@ -258,7 +258,7 @@ public class JSONObjectTest {
     public void serialize() throws Exception {
         JsonObjectBean javaBean = new JsonObjectBean();
         javaBean.setK1("11");
-        String serialize = jsonObject.serialize(javaBean , true);
+        String serialize = jsonObject.serialize(javaBean , true , "boolean1");
         System.out.println(serialize);
     }
 
