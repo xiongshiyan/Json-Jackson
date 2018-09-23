@@ -19,7 +19,7 @@ public class FieldPropertyNamingStrategy extends PropertyNamingStrategy {
         if(null == annotation || "".equals(annotation.value())){
             return defaultName;
         }
-        return annotation.value();
+        return "".equals(annotation.value()) ?  defaultName : annotation.value();
     }
 
     @Override
@@ -28,6 +28,6 @@ public class FieldPropertyNamingStrategy extends PropertyNamingStrategy {
         if(null == annotation){
             return super.nameForGetterMethod(config, method, defaultName);
         }
-        return annotation.value();
+        return "".equals(annotation.value()) ?  defaultName : annotation.value();
     }
 }
