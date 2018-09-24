@@ -43,6 +43,15 @@ public class JSONObject extends BaseMapJSONObject {
     }
 
     @Override
+    protected String map2Str(Map<String, Object> map) {
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new JsonException(e);
+        }
+    }
+
+    @Override
     public JsonObject getJsonObject(String key) {
         assertKey(key);
         //这里不能使用getJSONObject，因为每一种Json实现不一样，给出的JsonObject类型是不一致的。
@@ -110,24 +119,6 @@ public class JSONObject extends BaseMapJSONObject {
         }
     }
 
-    @Override
-    public String toString() {
-        //需要针对JsonObject/JsonArray处理
-        Map<String , Json> map = new HashMap<>();
-        for (String key : this.map.keySet()) {
-            Object o = this.map.get(key);
-            if(o instanceof JsonObject || o instanceof JsonArray){
-                map.put(key , (Json) o);
-            }
-        }
-        map.forEach((k , v)-> this.map.put(k , v.unwrap()));
-
-        try {
-            return objectMapper.writeValueAsString(this.map);
-        } catch (JsonProcessingException e) {
-            throw new JsonException(e);
-        }
-    }
     @Override
     public JsonObject fromMap(Map<String, Object> map) {
         return new JSONObject(map);
